@@ -1,0 +1,4 @@
+interface:
+  display_name: "B站素材采集 Bilibili Material"
+  short_description: "关键词搜索、批量下载、弹幕高能时刻与素材索引"
+  default_prompt: "Use $bilibili-material to search Bilibili by keyword, batch-download videos into the material library, fetch danmaku hotspots, and build the media index."
