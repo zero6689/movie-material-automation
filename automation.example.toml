@@ -4,7 +4,7 @@ kind = "cron"
 name = "每日电影素材采集 + 清洗 + 方向文案（公开模板）"
 
 # 提示词正文请使用占位符，例如：
-#   工作目录 = <PROJECT_ROOT>（不要写 V:\CodexProjects 等本机绝对路径）
+#   工作目录 = <PROJECT_ROOT>（只写占位符，任何真实盘符/用户名路径都不得出现在发布文件里）
 #   密钥文件 = <PROJECT_ROOT>/.env（只写文件名约定，不写绝对路径，不上传 .env）
 #   输出目录 = <PROJECT_ROOT>/素材库/movie/daily/YYYY-MM-DD/
 # 不要把以下字段发布：cwds、target.project_id、本机用户名/盘符路径。
