@@ -29,10 +29,9 @@ try:
 except Exception:
     pass
 
-PYTHON_LIBS = [
-    r"V:\CodexProjects\witcher-world\python-libs",
-]
-FFMPEG_PATHS = [r"V:\CodexProjects\.tools\ffmpeg\bin\ffmpeg.exe"]
+# 可留空：yt_dlp 已装到当前 Python 环境时无需额外配置；也可用 YTDLP_CMD 指定可执行文件。
+PYTHON_LIBS = []
+FFMPEG_PATHS = []
 BV_RE = re.compile(r"^(BV[0-9A-Za-z]{10})$")
 BILI_URL_RE = re.compile(r"^https://www\.bilibili\.com/video/(BV[0-9A-Za-z]{10})(?:[/?#]|$)")
 
@@ -44,7 +43,7 @@ def find_ffmpeg():
     for p in FFMPEG_PATHS:
         if os.path.exists(p):
             return p
-    raise SystemExit("未找到 ffmpeg")
+    raise SystemExit("未找到 ffmpeg：请加入 PATH 或设置 FFMPEG 环境变量")
 
 
 def ytdlp_cmd():
