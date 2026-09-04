@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>movie-material-automation · 电影素材自动化采集脚本</title>
+<style>
+  :root { --bg:#0f1115; --card:#171b22; --line:#262c36; --tx:#e7e9ee; --dim:#9aa3b2; --acc:#4f8cff; }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { background: var(--bg); color: var(--tx); font: 16px/1.7 "Microsoft YaHei", system-ui, sans-serif; padding: 40px 16px; }
+  main { max-width: 880px; margin: 0 auto; }
+  h1 { font-size: 26px; letter-spacing: .3px; }
+  h2 { font-size: 18px; margin: 28px 0 12px; color: var(--acc); }
+  p { color: var(--dim); }
+  .badge { display:inline-block; background: var(--acc); color:#fff; border-radius: 999px; font-size: 12px; padding: 2px 10px; vertical-align: middle; margin-left: 8px; }
+  .card { background: var(--card); border: 1px solid var(--line); border-radius: 12px; padding: 18px 20px; margin: 12px 0; }
+  ul, ol { padding-left: 22px; color: var(--tx); }
+  code { background:#0b0d11; border:1px solid var(--line); border-radius:6px; padding:2px 7px; font-size: 14px; }
+  a { color: var(--acc); text-decoration: none; }
+  a:hover { text-decoration: underline; }
+  .meta { color: var(--dim); font-size: 14px; margin-top: 10px; }
+</style>
+</head>
+<body>
+<main>
+  <h1>movie-material-automation<span class="badge">GitHub Pages</span></h1>
+  <p class="meta">电影素材每日自动化采集（B站 / A站 等）：侦察 → 过滤精选 → 下载 → 音轨修复 → 水印清洗 → 弹幕高能 → 索引 → 方向文案 → 日报</p>
+
+  <div class="card">
+    <h2>这是什么</h2>
+    <p>一组本地运行的电影素材采集与清洗脚本，服务于每日“电影素材采集 + 清洗 + 方向文案”自动化流水线。本仓库发布的是<b>可复用的脚本与文档</b>，不含任何个人素材、密钥或运行产物。</p>
+  </div>
+
+  <div class="card">
+    <h2>仓库结构</h2>
+    <ul>
+      <li><code>bilibili-material/</code> — 搜索 / 下载 / 清洗 / 弹幕 / 索引脚本（B站、A站、西瓜、YouTube、Mixkit、Yandex）</li>
+      <li><code>movie_work/</code> — 电影线辅助脚本（合并过滤、精选、水印裁剪、索引增强、DeepSeek 文案）</li>
+      <li><code>automation.example.toml</code> — 脱敏后的自动化配置模板</li>
+      <li><code>.gitignore</code> — 密钥 / Cookie / 素材 / 产物排除清单</li>
+    </ul>
+  </div>
+
+  <div class="card">
+    <h2>安全说明</h2>
+    <ul>
+      <li>仓库内无任何 API 密钥或 Cookie；运行所需密钥只从环境变量 / <code>.env</code> 读取，且 <code>.env</code> 严禁提交。</li>
+      <li>下载器只接受白名单域名与合法视频 ID；Yandex 采集启用 TLS 校验并限制图片类型与大小；CSV 导出已做公式注入转义。</li>
+    </ul>
+  </div>
+
+  <div class="card">
+    <h2>使用与文档</h2>
+    <p>完整用法与运行前提见 <a href="https://github.com/zero6689/movie-material-automation/blob/main/README.md">README.md</a> 与 <a href="https://github.com/zero6689/movie-material-automation/blob/main/bilibili-material/SKILL.md">SKILL.md</a>（GitHub 仓库内）。</p>
+  </div>
+
+  <div class="card">
+    <h2>环境依赖</h2>
+    <p>Python 3.10+、requests / Pillow / numpy，以及 ffmpeg / ffprobe / yt-dlp（可用 <code>FFMPEG</code>、<code>FFPROBE</code>、<code>YTDLP_CMD</code> 环境变量指定）。</p>
+  </div>
+</main>
+</body>
+</html>
