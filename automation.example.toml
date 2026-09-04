@@ -1,0 +1,17 @@
+# 公开模板：请复制为 automation.toml 并按需填写（勿提交真实密钥/本机路径）
+version = 1
+kind = "cron"
+name = "每日电影素材采集 + 清洗 + 方向文案（公开模板）"
+
+# 提示词正文请使用占位符，例如：
+#   工作目录 = <PROJECT_ROOT>（不要写 V:\CodexProjects 等本机绝对路径）
+#   密钥文件 = <PROJECT_ROOT>/.env（只写文件名约定，不写绝对路径，不上传 .env）
+#   输出目录 = <PROJECT_ROOT>/素材库/movie/daily/YYYY-MM-DD/
+# 不要把以下字段发布：cwds、target.project_id、本机用户名/盘符路径。
+prompt = "请按仓库内 README.md 与 bilibili-material/SKILL.md 的描述运行每日电影素材采集流程：侦察→合并过滤→精选→下载→音轨修复→清洗→弹幕高能→索引→方向文案→日报。密钥仅从环境变量/项目 .env 读取且绝不打印、绝不入库。输出默认落在项目素材目录。"
+
+# 注意：注释写的执行时间须与 rrule 一致（历史版本曾出现“每日 15:00”注释与 BYHOUR=22 不一致）
+status = "PAUSED"
+# rrule 示例（每日 22:00）：RRULE:FREQ=DAILY;BYHOUR=22;BYMINUTE=0
+# rrule = "RRULE:FREQ=DAILY;BYHOUR=22;BYMINUTE=0"
+# model / reasoning_effort / execution_environment 等字段按你的运行器说明填写，不发布本机项目 UUID。
