@@ -30,9 +30,8 @@ try:
 except Exception:
     pass
 
-PYTHON_LIBS = [r"V:\CodexProjects\witcher-world\python-libs"]
-FFMPEG_PATHS = [r"V:\CodexProjects\.tools\ffmpeg\bin\ffmpeg.exe",
-                r"V:\CodexProjects\.tools\ffmpeg\bin\ffmpeg.exe"]
+PYTHON_LIBS = []  # 可留空：yt_dlp 装在当前 Python 环境或由 YTDLP_CMD 指定
+FFMPEG_PATHS = []  # ffmpeg 通过 PATH 或 FFMPEG 环境变量查找
 ALLOWED_HOSTS = ("youtube.com", "youtu.be", "twitch.tv",
                  "acfun.cn", "ixigua.com")
 ID_RE = re.compile(r"^[0-9A-Za-z_-]{2,64}$")
@@ -46,7 +45,7 @@ def find_ffmpeg():
     for p in FFMPEG_PATHS:
         if os.path.exists(p):
             return p
-    raise SystemExit("未找到 ffmpeg")
+    raise SystemExit("未找到 ffmpeg：请加入 PATH 或设置 FFMPEG 环境变量")
 
 
 def ytdlp_cmd():
