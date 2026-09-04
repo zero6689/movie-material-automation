@@ -26,8 +26,9 @@ except Exception:
 import numpy as np
 from PIL import Image
 
-_FFMPEG_FALLBACK = r"V:\CodexProjects\.tools\ffmpeg\bin\ffmpeg.exe"
-FFMPEG = os.environ.get("FFMPEG") or shutil.which("ffmpeg") or _FFMPEG_FALLBACK
+FFMPEG = os.environ.get("FFMPEG") or shutil.which("ffmpeg")
+if not FFMPEG:
+    raise SystemExit("未找到 ffmpeg：请加入 PATH 或设置 FFMPEG 环境变量")
 VIDEO_EXTS = {".mp4", ".mkv", ".mov", ".avi", ".webm", ".m4v", ".flv", ".ts", ".m4s"}
 
 
