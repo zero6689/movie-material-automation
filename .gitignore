@@ -1,0 +1,31 @@
+# 密钥与凭据 —— 绝不提交
+.env
+.env.*
+!*.example.toml
+*cookies*.txt
+cookies.txt
+cookie_string*.txt
+
+# 本地素材与运行产物
+素材库/
+素材/
+downloads/
+*.mp4
+*.mkv
+*.webm
+*.m4a
+*.part.mp4
+__pycache__/
+*.pyc
+work/
+frames/
+manifest.json
+api_manifest.json
+download_manifest.json
+index.json
+index.csv
+
+# 安全扫描与临时文件
+.security-scans/
+.wm_tmp.png
+*.videoonly.mp4
