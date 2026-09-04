@@ -12,10 +12,11 @@
 
 ## 输出目录约定
 
-按全局规则，素材默认放 V 盘：
+素材与产物默认放在你指定的素材根目录下（本仓库不写死任何本机路径），
+建议按项目隔离：
 
 ```text
-V:\CodexProjects\素材库\<项目名>\
+<素材根目录>/<项目名>/
 ├─ videos.json / videos.csv        # 搜索列表
 ├─ <BV号>.mp4                      # 规范化成品
 ├─ <BV号>\.info.json               # yt-dlp 原始元数据
@@ -41,8 +42,7 @@ _uuid/b_lsid/sid/innersign）。缺少时会触发风控：旧接口 412，新�
 
 ## 下载与清晰度说明
 
-内部调用 yt-dlp（`python -m yt_dlp`，包在
-`V:\CodexProjects\witcher-world\python-libs`；也可设 `YTDLP_CMD` 覆盖）。
+内部调用 yt-dlp（`python -m yt_dlp`；可设 `YTDLP_CMD` 指向可执行文件）。
 
 | 清晰度 | 匿名 | 说明 |
 | --- | --- | --- |
@@ -52,6 +52,7 @@ _uuid/b_lsid/sid/innersign）。缺少时会触发风控：旧接口 412，新�
 
 下载后用 ffmpeg 统一规范化为 `libx264 + aac + yuv420p + faststart`，
 保证所有剪辑软件与 B 站上传都能直接吃。`--no-normalize` 可跳过。
+ffmpeg / ffprobe 通过 `PATH` 查找，也可用 `FFMPEG` / `FFPROBE` 环境变量指定。
 
 ## 弹幕接口与高能时刻
 
@@ -88,73 +89,14 @@ GET https://api.bilibili.com/x/v1/dm/list.so?oid=<cid>
 - 中文关键词乱码：用 `--keyword-file` 传 UTF-8 文件，不要直接拼命令行。
 - 下载很慢：yt-dlp 是单线程；需要并发可对 manifest 分片并行跑。
 - 版权提醒：仅用于个人学习/二次创作素材收集，注意原作者授权与平台规则。
-
-## 电影街（moviejie.net）采集
-
-### 登录态是硬性要求
-
-电影街整站登录墙：`/`、`/new/`（最新）、`/schedule/`、`/btbee/`、
-`/subbee/`、`/door/`、`/user/rss/` 以及所有搜索/磁力结果页都会 302 到
-`/user/login/`。唯一探到的免登录页面是 `/cili/`（磁力搜索入口），但它的
-搜索结果同样要登录。油猴脚本能在浏览器里抓表格，是因为浏览器里有登录态。
-
-`search_moviejie.py` 需要登录 Cookie 才能采集：
-
-- `--cookies cookies.txt`：Netscape 格式。Chrome 装
-  “Get cookies.txt LOCALLY”扩展，在 moviejie.net 页面导出即可。
-- `--cookie-string "k=v; k2=v2"`：DevTools → Application → Cookies →
-  moviejie.net 里复制 Cookie 字符串直接粘贴（注意整串都要带）。
-
-### 页面结构与解析字段
-
-解析逻辑与油猴脚本一致（`table tbody tr`）：
-
-| 字段 | 选择器/位置 |
-| --- | --- |
-| 资源名称 | `.restitle`，自动去标签、去末尾 ↗ |
-| 大小 | 行内第 2 个 `<td>` |
-| 做种数 | `.seeders` |
-| 下载数 | `.leechers` |
-| 下载链接 | `a[href*="/download/"]` / `magnet:` / `thunder:`；无链接时标记 `VIP可见` / `无链接` |
-| 类型 | 按名称关键词粗分 电影/剧集（season/ep/第/集/季/全/完/hdtv/webrip/S01E…） |
-
-翻页跟随页面里的“下一页”链接自动解析，`--pages` 控制上限。
-
-### 限流与稳定性
-
-本站对高频探测会临时封 IP（表现为连接全部超时，约几分钟到更久后恢复）。
-脚本默认每次请求间隔 3 秒、失败退避（3s/6s/12s）重试 3 次，请勿调小
-`--delay` 或并发运行。被封后等 10 分钟以上再试。
-
-### 下载说明
-
-电影街给的是 BT/磁力/迅雷链接（`/download/` 跳转页、`magnet:`、`thunder:`），
-不是直链视频。采集清单拿到磁力后，用 qBittorrent 等 BT 客户端下载成片，
-再走 `clean_materials.py` 清洗和 `index_materials.py` 建索引，即可与 B 站素材
-一样进入下游剪辑流程。
-
-### 反爬拦截时的备用路径：油猴导出 CSV
-
-站点对非浏览器流量很敏感（高频探测后会把出口 IP 的连接在 TCP 层丢包，
-表现为 ConnectTimeout，持续几十分钟到几小时；浏览器登录态不受影响）。
-此时不硬等，直接用浏览器里的油猴脚本点「📥 导出CSV」，把下载的文件交给
-`import_moviejie_csv.py` 入库：
-
-```bash
-python scripts/import_moviejie_csv.py --csv 电影街_2026-08-16.csv \
-  --out moviejie_export.json --csv-out moviejie_export.csv
-```
-
-支持一次传多个 CSV 合并去重（按 名称+链接）。注意：油猴脚本在列表页只能拿
-到「无链接/VIP可见」标记，真正的磁力/下载链接需要登录后进资源详情页获取。
+- Cookie 文件（cookies*.txt）属于登录凭据：只放本地、不要提交到仓库、不要打印。
 
 ## YouTube / Twitch 采集说明
 
 ### 网络前提：必须能访问外网
 
-YouTube/Twitch 从国内网络不可达。本机开 VPN 后，命令要跑在宿主网络下
-（Codex 的执行沙箱走独立出口，VPN 不生效；沙箱里连 YouTube 会直接
-ConnectTimeout，需在宿主网络/终端里运行脚本）。
+YouTube/Twitch 从部分网络不可达。本机开 VPN 后，命令要跑在 VPN 生效的
+网络环境里执行（隔离沙箱可能走独立出口）。
 
 ### YouTube
 
@@ -176,7 +118,7 @@ ConnectTimeout，需在宿主网络/终端里运行脚本）。
 片段（clip）与回放（VOD）链接免登录可直接下载：
 
 ```bash
-python scripts/download_yt.py --list-file clips.txt --out-dir 素材库/twitch
+python scripts/download_yt.py --list-file clips.txt --out-dir materials/twitch
 ```
 
 每行一个 `https://www.twitch.tv/<频道>/clip/<ClipID>` 或
@@ -188,7 +130,7 @@ python scripts/download_yt.py --list-file clips.txt --out-dir 素材库/twitch
 `--section 0-15` 先整段下载再用本地 ffmpeg 切割（yt-dlp 的
 `--download-sections` 在部分格式上会报错，脚本会自动回退）。产物统一规范化为
 `libx264 + aac + yuv420p + faststart`，`download_manifest.json` 记录
-id/标题/频道/时长/文件路径，可直连 `clean_materials.py` 和 `index_materials.py`。
+id/标题/频道/时长/文件路径，可直连清洗与索引。
 
 ## A站 / 西瓜 / Mixkit 采集说明
 
@@ -235,10 +177,10 @@ https://assets.mixkit.co/videos/<id>/<id>-1080.mp4  （部分视频有，HEAD �
 ## 与卡点/字幕技能衔接
 
 ```bash
-# 卡点：先切镜头再对齐
-python <beat-cut-sync>/scripts/detect_shots.py --input 素材库/witcher/BVxxx.mp4 --out shots.json
-python <beat-cut-sync>/scripts/align_cuts.py --beats beats.json --shots shots.json --step 4 --out plan.json
+# 卡点：先切镜头再对齐（需对应剪辑技能/脚本）
+detect_shots.py --input 素材/BVxxx.mp4 --out shots.json
+align_cuts.py --beats beats.json --shots shots.json --step 4 --out plan.json
 
-# 字幕：转写 → ASS → 烧录 → 审阅
-python <subtitle-review>/scripts/transcribe.py --input 素材库/witcher/BVxxx.mp4 --lang zh --model tiny
+# 字幕：转写 → ASS → 烧录 → 审阅（需对应字幕技能/脚本）
+transcribe.py --input 素材/BVxxx.mp4 --lang zh --model tiny
 ```
