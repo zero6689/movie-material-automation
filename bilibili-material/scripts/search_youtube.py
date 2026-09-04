@@ -24,7 +24,7 @@ def csv_cell(v):
     return "'" + s if s[:1] in ("=", "+", "-", "@", "\t", "\r") else s
 
 
-PYTHON_LIBS = [r"V:\CodexProjects\witcher-world\python-libs"]
+PYTHON_LIBS = []  # 可留空：yt_dlp 装在当前 Python 环境或由 YTDLP_CMD 指定
 
 
 def ytdlp_cmd():
