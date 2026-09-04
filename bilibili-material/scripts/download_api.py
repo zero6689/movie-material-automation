@@ -31,10 +31,7 @@ except Exception:
 
 UA = ("Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 "
       "(KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36")
-FFMPEG_PATHS = [
-    r"V:\CodexProjects\.tools\ffmpeg\bin\ffmpeg.exe",
-    r"V:\CodexProjects\.tools\ffmpeg\bin\ffmpeg.exe",
-]
+FFMPEG_PATHS = []  # ffmpeg 通过 PATH 或 FFMPEG 环境变量查找
 BV_RE = re.compile(r"^(BV[0-9A-Za-z]{10})$")
 BILI_URL_RE = re.compile(r"^https://www\.bilibili\.com/video/(BV[0-9A-Za-z]{10})(?:[/?#]|$)")
 
@@ -50,7 +47,7 @@ def find_ffmpeg():
     for p in FFMPEG_PATHS:
         if os.path.exists(p):
             return p
-    raise SystemExit("未找到 ffmpeg")
+    raise SystemExit("未找到 ffmpeg：请加入 PATH 或设置 FFMPEG 环境变量")
 
 
 def extract_bvid(raw):
