@@ -22,7 +22,7 @@ def csv_cell(v):
     return "'" + s if s[:1] in ("=", "+", "-", "@", "\t", "\r") else s
 
 
-FFPROBE_PATHS = [r"V:\CodexProjects\.tools\ffmpeg\bin\ffprobe.exe"]
+FFPROBE_PATHS = []  # ffprobe 通过 PATH 或 FFPROBE 环境变量查找
 
 
 def ffprobe():
@@ -32,7 +32,7 @@ def ffprobe():
     for p in FFPROBE_PATHS:
         if os.path.exists(p):
             return p
-    raise SystemExit("未找到 ffprobe")
+    raise SystemExit("未找到 ffprobe：请加入 PATH 或设置 FFPROBE 环境变量")
 
 
 def probe(path):
