@@ -85,18 +85,25 @@ def tier(title):
     return "原声候选"
 
 
+def _library_root():
+    """素材库根：优先 MATERIAL_ROOT 环境变量，其次工作目录下的 素材库/。"""
+    p = os.environ.get("MATERIAL_ROOT", "").strip().strip('\"')
+    if p and os.path.isdir(p):
+        return p
+    local = os.path.join(os.getcwd(), "素材库")
+    return local if os.path.isdir(local) else ""
+
+
 def history_ids():
     """扫描素材库历史，收集已有 bvid/acId 与 (标题,时长) 指纹。"""
     ids, fingerprints = set(), set()
-    patterns = [
-        os.path.join("V:\\CodexProjects", "素材库", "**", "candidates.json"),
-        os.path.join("V:\\CodexProjects", "素材库", "**", "download_manifest.json"),
-        os.path.join("V:\\CodexProjects", "素材库", "**", "index.json"),
-    ]
+    root = _library_root()
+    if not root:
+        return ids, fingerprints  # 未配置素材库根目录时跳过历史去重
     patterns = [
         # 只把“实际下载/入库”的素材视为历史；candidates.json 只是侦察结果，不算已采集
-        os.path.join("V:\\CodexProjects", "素材库", "**", "download_manifest.json"),
-        os.path.join("V:\\CodexProjects", "素材库", "**", "index.json"),
+        os.path.join(root, "**", "download_manifest.json"),
+        os.path.join(root, "**", "index.json"),
     ]
     for pat in patterns:
         for p in glob.glob(pat, recursive=True):
@@ -116,11 +123,11 @@ def history_ids():
                 if title and dur:
                     fingerprints.add(f"{title}|{dur}")
     # 也扫实际下载文件
-    for p in glob.glob(os.path.join("V:\\CodexProjects", "素材库", "**", "bilibili", "BV*.mp4"), recursive=True):
+    for p in glob.glob(os.path.join(root, "**", "bilibili", "BV*.mp4"), recursive=True):
         m = re.search(r"(BV[0-9A-Za-z]+)", os.path.basename(p))
         if m:
             ids.add(m.group(1))
-    for p in glob.glob(os.path.join("V:\\CodexProjects", "素材库", "**", "acfun", "ac*.mp4"), recursive=True):
+    for p in glob.glob(os.path.join(root, "**", "acfun", "ac*.mp4"), recursive=True):
         m = re.search(r"(ac\d+)", os.path.basename(p))
         if m:
             ids.add(m.group(1))
